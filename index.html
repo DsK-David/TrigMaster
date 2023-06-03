@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrigMaster</title>
+</head>
+<body class="bg-dark" style="color: #fff;">
+    <div class="container">
+      <h1 class="text-center mt-4">TrigMaster</h1>
+  
+      <form id="trigForm" class="mt-4">
+        <div class="form-group">
+          <label for="angle">Insira um ângulo (em graus):</label>
+          <input type="number" class="form-control" id="angle" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Calcular</button>
+      </form>
+  
+      <div class="result mt-4" id="result"></div>
+    </div>
+  
+    <script>
+      const form = document.getElementById('trigForm');
+      const resultDiv = document.getElementById('result');
+  
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+  
+        const angleInput = document.getElementById('angle');
+        const angle = angleInput.value.trim();
+  
+        if (angle === '') {
+          resultDiv.textContent = 'Please enter an angle.';
+          return;
+        }
+  
+        fetch(`/calculate?angle=${angle}`)
+          .then((response) => response.json())
+          .then((data) => {
+            const resultText = `
+              <h4>Resultado:</h4>
+              <p><strong>Angulo:</strong> ${data.angle}°</p>
+              <p><strong>Seno:</strong> ${data.sin}</p>
+              <p><strong>Coseno:</strong> ${data.cos}</p>
+              <p><strong>Tangente:</strong> ${data.tan}</p>
+            `;
+            resultDiv.innerHTML = resultText;
+          })
+          .catch((error) => {
+            console.error(error);
+            resultDiv.textContent = 'An error occurred while calculating.';
+          });
+      });
+    </script>
+  </body>
+</html>
